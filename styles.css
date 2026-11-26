@@ -186,8 +186,10 @@ table.impact td.muted { color: var(--muted); }.delta-up { color: #006300; }
 /* settings list */
 .activity-list { list-style: none; margin: 0 0 12px; padding: 0; }
 .activity-list li { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--grid); }
-.activity-list li input { flex: 1; }
-.activity-list .count { color: var(--muted); font-size: 13px; min-width: 60px; text-align: right; }
+.activity-list li input { flex: 1; min-width: 0; } /* min-width 0 lets the box shrink instead of pushing Delete out */
+.activity-list .swatch { flex-shrink: 0; }
+.activity-list .count { color: var(--muted); font-size: 13px; min-width: 60px; text-align: right; white-space: nowrap; flex-shrink: 0; }
+.activity-list .danger-btn { flex-shrink: 0; }
 .add-row { display: flex; gap: 8px; flex-wrap: wrap; }
 .add-row input { flex: 1; min-width: 180px; }
 
@@ -206,4 +208,13 @@ table.impact td.muted { color: var(--muted); }.delta-up { color: #006300; }
   .mood-split .half { padding: 0 3px; min-width: 12px; }
   .mood-btn .lbl { display: none; }
   .card { padding: 16px; }
+  /* Activities tab on small phones (e.g. iPhone 13 mini, 375px) */
+  .activity-list li { gap: 8px; }
+  .activity-list .count { min-width: 0; font-size: 12px; }
+  .activity-list .danger-btn { padding-left: 8px; padding-right: 8px; }
+  .add-row input { min-width: 0; }
+  /* keep all four tabs on one line */
+  .topbar { gap: 8px 24px; }
+  .tabs { gap: 2px; flex-wrap: nowrap; }
+  .tab { padding: 8px 9px; }
 }
