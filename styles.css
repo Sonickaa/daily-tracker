@@ -41,6 +41,8 @@
 }
 
 * { box-sizing: border-box; }
+/* make the `hidden` attribute win over display: flex/grid rules (e.g. the filter bar) */
+[hidden] { display: none !important; }
 body {
   margin: 0;
   background: var(--page);
