@@ -189,7 +189,14 @@ table.impact td.muted { color: var(--muted); }.delta-up { color: #006300; }
 .activity-list li input { flex: 1; min-width: 0; } /* min-width 0 lets the box shrink instead of pushing Delete out */
 .activity-list .swatch { flex-shrink: 0; }
 .activity-list .count { color: var(--muted); font-size: 13px; min-width: 60px; text-align: right; white-space: nowrap; flex-shrink: 0; }
-.activity-list .danger-btn { flex-shrink: 0; }
+/* quiet bin icon; only turns red when you touch/hover it */
+.bin-btn {
+  flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; padding: 0; border: 0; border-radius: 8px;
+  background: transparent; color: var(--muted); cursor: pointer;
+}
+.bin-btn:hover, .bin-btn:active { color: var(--danger); background: var(--surface-2); }
+.bin-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .add-row { display: flex; gap: 8px; flex-wrap: wrap; }
 .add-row input { flex: 1; min-width: 180px; }
 
@@ -211,7 +218,6 @@ table.impact td.muted { color: var(--muted); }.delta-up { color: #006300; }
   /* Activities tab on small phones (e.g. iPhone 13 mini, 375px) */
   .activity-list li { gap: 8px; }
   .activity-list .count { min-width: 0; font-size: 12px; }
-  .activity-list .danger-btn { padding-left: 8px; padding-right: 8px; }
   .add-row input { min-width: 0; }
   /* keep all four tabs on one line */
   .topbar { gap: 8px 24px; }

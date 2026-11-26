@@ -687,7 +687,11 @@ function renderSettings() {
       <span class="swatch" style="background:${actColor(a)}"></span>
       <input type="text" value="${esc(a.name)}" maxlength="40" aria-label="Activity name" />
       <span class="count">${counts[a.id] || 0} days</span>
-      <button class="danger-btn" data-del="${a.id}">Delete</button>
+      <button class="bin-btn" data-del="${a.id}" aria-label="Delete ${esc(a.name)}" title="Delete">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+        </svg>
+      </button>
     </li>`).join("") || `<li class="hint">No activities yet.</li>`;
 
   $("activity-list").querySelectorAll("li[data-id] input").forEach((inp) => inp.addEventListener("change", () => {
