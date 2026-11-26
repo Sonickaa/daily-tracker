@@ -809,5 +809,21 @@ function bindEvents() {
 
 // Offline support + "Add to Home Screen" (needs https or localhost).
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+  // When an update takes over, reload once so the new version shows right away
+  // (only if an older version was running — not on the very first install).
+  const hadController = !!navigator.serviceWorker.controller;
+  let reloaded = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (!hadController || reloaded) return;
+    reloaded = true;
+    // flush any pending save first, then reload
+    if (saveTimer) { clearTimeout(saveTimer); try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.data)); } catch {} }
+    location.reload();
+  });
+  const check = () => navigator.serviceWorker.getRegistration().then((r) => r && r.update()).catch(() => {});
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js", { updateViaCache: "none" }).catch(() => {});
+  });
+  // A home-screen app is often resumed, not restarted, so also check when it comes back to the front.
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") check(); });
 }
