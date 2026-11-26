@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Daily Tracker</title>
+  <meta name="description" content="Daily mood and activity tracker. Your data stays on your device." />
+  <meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Tracker" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icon-180.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1><button class="home-link" id="home-link" title="Go to calendar">Daily Tracker</button></h1>
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-view="log" role="tab">Log a day</button>
+      <button class="tab" data-view="calendar" role="tab">Calendar</button>
+      <button class="tab" data-view="graphs" role="tab">Graphs</button>
+      <button class="tab" data-view="settings" role="tab">Activities</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- LOG -->
+    <section id="view-log" class="view active">
+      <div class="card">
+        <div class="day-nav">
+          <button class="icon-btn" id="prev-day" aria-label="Previous day">‹</button>
+          <input type="date" id="log-date" />
+          <button class="icon-btn" id="next-day" aria-label="Next day">›</button>
+          <button class="ghost-btn" id="today-btn">Today</button>
+        </div>
+
+        <h2>☀︎ Morning mood</h2>
+        <div class="mood-picker" id="mood-am-picker" data-field="moodAM"></div>
+
+        <h2>☾ Evening mood</h2>
+        <div class="mood-picker" id="mood-pm-picker" data-field="moodPM"></div>
+
+        <h2>Relationship mood</h2>
+        <div class="mood-picker" id="rel-picker" data-field="relMood"></div>
+
+        <h2>Activities</h2>
+        <div class="activity-picker" id="activity-picker"></div>
+
+        <h2>Note</h2>
+        <textarea id="note" rows="3" placeholder="Anything worth remembering about today?"></textarea>
+
+        <div class="row-end">
+          <span class="save-status" id="save-status" aria-live="polite"></span>
+          <button class="danger-btn" id="clear-day">Clear this day</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- shared filter bar for calendar + graphs -->
+    <div class="filters" id="filters" hidden>
+      <div class="filter-group">
+        <span class="filter-label">Activities</span>
+        <div class="chips" id="filter-chips"></div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Match</span>
+        <select id="filter-mode">
+          <option value="any">Any selected</option>
+          <option value="all">All selected</option>
+        </select>
+      </div>
+      <div class="filter-group" id="range-group">
+        <span class="filter-label">Range</span>
+        <select id="filter-range">
+          <option value="7">Last 7 days</option>
+          <option value="30">Last 30 days</option>
+          <option value="90" selected>Last 90 days</option>
+          <option value="365">Last 12 months</option>
+          <option value="all">All time</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- CALENDAR -->
+    <section id="view-calendar" class="view">
+      <div class="card">
+        <div class="day-nav">
+          <button class="icon-btn" id="prev-month" aria-label="Previous month">‹</button>
+          <h2 id="month-label" class="month-label"></h2>
+          <button class="icon-btn" id="next-month" aria-label="Next month">›</button>
+          <button class="ghost-btn" id="this-month">This month</button>
+        </div>
+        <div class="legend" id="cal-legend"></div>
+        <div class="calendar" id="calendar"></div>
+        <p class="hint">Click a day to open it. Days that don't match the activity filter are faded.</p>
+      </div>
+    </section>
+
+    <!-- GRAPHS -->
+    <section id="view-graphs" class="view">
+      <div class="card">
+        <h2 id="act-chart-title">Activities per week</h2>
+        <div class="legend" id="act-legend"></div>
+        <div class="chart" id="activity-chart"></div>
+      </div>
+
+      <div class="card">
+        <h2>Activity over time</h2>
+        <div class="chart" id="timeline-chart"></div>
+        <p class="hint">Each mark is a day you did that activity. Pick activities in the filter bar to show only those. Click a day to open it.</p>
+      </div>
+
+      <div class="stats" id="stats"></div>
+
+      <div class="card">
+        <h2>Mood over time</h2>
+        <div class="legend" id="mood-legend"></div>
+        <div class="chart" id="mood-chart"></div>
+      </div>
+
+      <div class="card">
+        <h2>Mood on days with vs. without each activity</h2>
+        <div class="chart" id="impact-table"></div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="view-settings" class="view">
+      <div class="card">
+        <h2>Your activities</h2>
+        <ul class="activity-list" id="activity-list"></ul>
+        <form id="add-activity" class="add-row">
+          <input type="text" id="new-activity" placeholder="New activity, e.g. Yoga" maxlength="40" required />
+          <button type="submit" class="primary-btn">Add</button>
+        </form>
+      </div>
+      <div class="card">
+        <h2>Backup</h2>
+        <p class="hint">Your data is saved only on this device. It is never uploaded anywhere. If you lose the phone or clear the browser's data, it's gone, so download a backup now and then and keep it somewhere safe (for example in Files or iCloud Drive). To move to a new phone, restore that file there.</p>
+        <div class="add-row">
+          <button class="ghost-btn" id="export-btn">Download backup</button>
+          <label class="ghost-btn file-btn">Restore from file<input type="file" id="import-file" accept="application/json" hidden /></label>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="tooltip" id="tooltip" role="tooltip" hidden></div>
+  <script src="app.js"></script>
+</body>
+</html>
